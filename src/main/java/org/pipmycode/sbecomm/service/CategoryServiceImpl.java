@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class CategoryServiceImpl implements CategoryService{
+public class CategoryServiceImpl implements CategoryService {
 
     //just a fake database
     private List<Category> categories = new ArrayList<>();
@@ -29,7 +29,9 @@ public class CategoryServiceImpl implements CategoryService{
         Category category = categories.stream()
                 .filter(c -> c.getCategoryId().equals(categoryId))
                 .findFirst()
-                .get();
+                .orElse(null);
+        if (category == null)
+            return "Category not found";
 
         categories.remove(category);
         return "Category with categoryId: " + categoryId + " deleted successfully!";
