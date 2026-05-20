@@ -37,4 +37,15 @@ public class CategoryServiceImpl implements CategoryService {
         categories.remove(category);
         return "Category with categoryId: " + categoryId + " deleted successfully!";
     }
+
+    @Override
+    public String updateCategory(Category category, Long categoryId) {
+        Category existingCategory = categories.stream()
+                .filter(c -> c.getCategoryId().equals(categoryId))
+                .findFirst()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        existingCategory.setCategoryName(category.getCategoryName());
+        return "Category with categoryId: " + categoryId + " updated successfully!";
+    }
 }
