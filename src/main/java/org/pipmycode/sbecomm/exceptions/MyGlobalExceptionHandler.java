@@ -30,4 +30,20 @@ public class MyGlobalExceptionHandler {
         return response;
     }
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> myResourceNotFoundException(ResourceNotFoundException e) {
+        Map<String, String> response = new HashMap<>();
+        response.put("error", e.getMessage());
+        return response;
+
+    }
+
+    @ExceptionHandler(ResourceAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public Map<String, String> myResourceAlreadyExistsException(ResourceAlreadyExistsException e) {
+        Map<String, String> response = new HashMap<>();
+        response.put("error", e.getMessage());
+        return response;
+    }
 }
