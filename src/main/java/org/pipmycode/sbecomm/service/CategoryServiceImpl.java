@@ -5,7 +5,6 @@ import org.pipmycode.sbecomm.model.Category;
 import org.pipmycode.sbecomm.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.pipmycode.sbecomm.exceptions.ResourceNotFoundException;
-import org.pipmycode.sbecomm.exceptions.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

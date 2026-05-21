@@ -1,6 +1,7 @@
 package org.pipmycode.sbecomm.controller;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.pipmycode.sbecomm.model.Category;
 import org.pipmycode.sbecomm.service.CategoryService;
 import org.springframework.http.HttpStatus;
@@ -12,14 +13,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class CategoryController {
 
 
-    private CategoryService categoryService;
-
-    public CategoryController(CategoryService categoryService) {
-        this.categoryService = categoryService;
-    }
+    private final CategoryService categoryService;
 
     @GetMapping("/public/categories")
     // @RequestMapping(value = "/public/categories", method = RequestMethod.GET)
@@ -36,28 +34,17 @@ public class CategoryController {
 
     @DeleteMapping("/admin/categories/{categoryId}")
     public ResponseEntity<String> deleteCategory(@PathVariable Long categoryId) {
-        try {
             String status = categoryService.deleteCategory(categoryId);
-            // return. ResponseEntity.ok(status)
-            // return ResponseEntity.status(HttpStatus.OK).body(status);
             return new ResponseEntity<>(status, HttpStatus.OK);
-        } catch (ResponseStatusException e) {
-            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
-        }
     }
 
     @PutMapping("/admin/categories/{categoryId}")
     public ResponseEntity<String> updateCategory(
-            @RequestBody Category category,
+           @Valid @RequestBody Category category,
             @PathVariable Long categoryId
     ) {
-        try {
             String savedCategory = categoryService.updateCategory(category, categoryId);
             return new ResponseEntity<>(savedCategory, HttpStatus.OK);
-        } catch (ResponseStatusException e) {
-            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
-        }
-
     }
 
 }
