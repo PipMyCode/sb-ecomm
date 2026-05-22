@@ -3,7 +3,9 @@ package org.pipmycode.sbecomm.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.pipmycode.sbecomm.model.Category;
+import org.pipmycode.sbecomm.payload.CategoryResponse;
 import org.pipmycode.sbecomm.service.CategoryService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,9 +23,9 @@ public class CategoryController {
 
     @GetMapping("/public/categories")
     // @RequestMapping(value = "/public/categories", method = RequestMethod.GET)
-    public ResponseEntity<List<Category>> getAllCategories() {
-        List<Category> categories = categoryService.getAllCategories();
-        return new ResponseEntity<>(categories, HttpStatus.OK);
+    public ResponseEntity<CategoryResponse> getAllCategories() {
+           CategoryResponse categoryResponse = categoryService.getAllCategories();
+        return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
     }
 
     @PostMapping("/public/categories")

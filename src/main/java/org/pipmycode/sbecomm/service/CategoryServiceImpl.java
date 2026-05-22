@@ -1,13 +1,20 @@
 package org.pipmycode.sbecomm.service;
 
+import org.modelmapper.ModelMapper;
 import org.pipmycode.sbecomm.exceptions.ResourceAlreadyExistsException;
 import org.pipmycode.sbecomm.model.Category;
+import org.pipmycode.sbecomm.payload.CategoryDTO;
+import org.pipmycode.sbecomm.payload.CategoryResponse;
 import org.pipmycode.sbecomm.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.pipmycode.sbecomm.exceptions.ResourceNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -18,9 +25,20 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @Override
-    public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
+    public CategoryResponse getAllCategories() {
+        List<Category> categories = categoryRepository.findAll();
+
+        List<CategoryDTO> categoryDTOS = categories.stream()
+                .map(category -> modelMapper.map(category, CategoryDTO.class))
+                .toList();
+
+        CategoryResponse categoriesResponse = new CategoryResponse();
+        categoriesResponse.setContent(categoryDTOS);
+        return categoriesResponse;
     }
 
     @Override
