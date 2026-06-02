@@ -1,5 +1,6 @@
 package org.pipmycode.sbecomm.service;
 
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.pipmycode.sbecomm.exceptions.APIException;
 import org.pipmycode.sbecomm.exceptions.ResourceAlreadyExistsException;
@@ -19,15 +20,12 @@ import java.util.stream.Collectors;
 
 
 @Service
+@RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 
 
-
-    @Autowired
-    private CategoryRepository categoryRepository;
-
-    @Autowired
-    private ModelMapper modelMapper;
+    private final CategoryRepository categoryRepository;
+    private final ModelMapper modelMapper;
 
     @Override
     public CategoryResponse getAllCategories() {
@@ -47,13 +45,15 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void createCategory(Category category) {
-        Category existingCategory = categoryRepository.findByCategoryName(category.getCategoryName());
+    public CategoryDTO createCategory(CategoryDTO categoryDTO) {
+        Category existingCategory = categoryRepository.findByCategoryName(categoryDTO.getCategoryName());
 
         if (existingCategory != null) {
-            throw new ResourceAlreadyExistsException("Category with name: " + category.getCategoryName() + " already exists!");
+            throw new ResourceAlreadyExistsException("Category with name: " + categoryDTO.getCategoryName() + " already exists!");
         }
-        categoryRepository.save(category);
+        Category category = modelMapper.map(categoryDTO, Category.class);
+        Category savedCategory = categoryRepository.save(category);
+        return modelMapper.map(savedCategory, CategoryDTO.class);
     }
 
     @Override
@@ -65,13 +65,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public String updateCategory(Category category, Long categoryId) {
+    public CategoryDTO updateCategory(CategoryDTO categoryDTO, Long categoryId) {
         Category existingCategory = categoryRepository.findById(categoryId)
                 // basically means return an optional category cause id might not exist :)
                 .orElseThrow(() -> new ResourceNotFoundException("Category with categoryId: " + categoryId + " not found!"));
 
-        existingCategory.setCategoryName(category.getCategoryName());
-        categoryRepository.save(existingCategory);
-        return "Category with categoryId: " + categoryId + " updated successfully!";
+        existingCategory.setCategoryName(categoryDTO.getCategoryName());
+        Category updatedCategory = categoryRepository.save(existingCategory);
+        return modelMapper.map(updatedCategory, CategoryDTO.class);
     }
 }

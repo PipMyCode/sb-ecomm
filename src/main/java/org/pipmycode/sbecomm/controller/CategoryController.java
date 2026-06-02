@@ -3,6 +3,7 @@ package org.pipmycode.sbecomm.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.pipmycode.sbecomm.model.Category;
+import org.pipmycode.sbecomm.payload.CategoryDTO;
 import org.pipmycode.sbecomm.payload.CategoryResponse;
 import org.pipmycode.sbecomm.service.CategoryService;
 import org.springframework.http.HttpStatus;
@@ -27,8 +28,8 @@ public class CategoryController {
     }
 
     @PostMapping("/public/categories")
-    public ResponseEntity<String> createCategory(@Valid @RequestBody Category category) {
-        categoryService.createCategory(category);
+    public ResponseEntity<String> createCategory(@Valid @RequestBody CategoryDTO categoryDTO) {
+        CategoryDTO savedCategoryDTO = categoryService.createCategory(categoryDTO);
         return new ResponseEntity<>("Category added successfully", HttpStatus.CREATED);
     }
 
@@ -39,12 +40,12 @@ public class CategoryController {
     }
 
     @PutMapping("/admin/categories/{categoryId}")
-    public ResponseEntity<String> updateCategory(
-           @Valid @RequestBody Category category,
+    public ResponseEntity<CategoryDTO> updateCategory(
+           @Valid @RequestBody CategoryDTO categoryDTO,
             @PathVariable Long categoryId
     ) {
-            String savedCategory = categoryService.updateCategory(category, categoryId);
-            return new ResponseEntity<>(savedCategory, HttpStatus.OK);
+            CategoryDTO updatedCategoryDTO = categoryService.updateCategory(categoryDTO, categoryId);
+            return new ResponseEntity<>(updatedCategoryDTO, HttpStatus.OK);
     }
 
 }
