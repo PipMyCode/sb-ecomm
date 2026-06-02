@@ -5,11 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.pipmycode.sbecomm.model.Category;
 import org.pipmycode.sbecomm.payload.CategoryResponse;
 import org.pipmycode.sbecomm.service.CategoryService;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 

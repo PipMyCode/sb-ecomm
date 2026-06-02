@@ -1,6 +1,7 @@
 package org.pipmycode.sbecomm.service;
 
 import org.modelmapper.ModelMapper;
+import org.pipmycode.sbecomm.exceptions.APIException;
 import org.pipmycode.sbecomm.exceptions.ResourceAlreadyExistsException;
 import org.pipmycode.sbecomm.model.Category;
 import org.pipmycode.sbecomm.payload.CategoryDTO;
@@ -32,6 +33,10 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryResponse getAllCategories() {
         List<Category> categories = categoryRepository.findAll();
 
+        if (categories.isEmpty()) {
+            throw new APIException("No categories have been created yet!");
+        }
+
         List<CategoryDTO> categoryDTOS = categories.stream()
                 .map(category -> modelMapper.map(category, CategoryDTO.class))
                 .toList();
@@ -62,6 +67,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public String updateCategory(Category category, Long categoryId) {
         Category existingCategory = categoryRepository.findById(categoryId)
+                // basically means return an optional category cause id might not exist :)
                 .orElseThrow(() -> new ResourceNotFoundException("Category with categoryId: " + categoryId + " not found!"));
 
         existingCategory.setCategoryName(category.getCategoryName());
