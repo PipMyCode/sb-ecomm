@@ -16,6 +16,14 @@ import java.util.Map;
 @RestControllerAdvice
 public class MyGlobalExceptionHandler {
 
+    @ExceptionHandler(APIException.class)
+    public ResponseEntity<Map<String, String>> handleAPIException(APIException e) {
+        Map<String, String> response = new HashMap<>();
+        response.put("error", e.getMessage());
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException e) {
         Map<String, String> errors = new HashMap<>();
